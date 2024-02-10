@@ -10,9 +10,25 @@ import {
 } from "agora-rtc-react";
 import React, { useState } from "react";
 
+import * as web3 from "@solana/web3.js";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import {
+  ConnectionProvider,
+  WalletProvider
+} from "@solana/wallet-adapter-react";
+import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
+import * as walletAdapterWallets from "@solana/wallet-adapter-wallets";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+
+require("@solana/wallet-adapter-react-ui/styles.css");
+
 import "./styles.css";
 
+const endpoint = web3.clusterApiUrl("devnet");
+const wallets = [new walletAdapterWallets.PhantomWalletAdapter()];
+
 export const Basics = () => {
+  let base58Pubkey
   const [calling, setCalling] = useState(false);
   const isConnected = useIsConnected();
   const [appId, setAppId] = useState(""); 
@@ -29,6 +45,18 @@ export const Basics = () => {
   //remote users
   const remoteUsers = useRemoteUsers();
 
+
+  function Func() {
+    const { publicKey, sendTransaction  } = useWallet();
+    const { connection } = useConnection();
+    if (publicKey != null) {
+      base58Pubkey = publicKey.toBase58();
+      console.log(base58Pubkey); 
+      // console.log(balance);
+    }
+    
+    }
+
   return (
     <>
       <div className="room">
@@ -42,7 +70,7 @@ export const Basics = () => {
                 videoTrack={localCameraTrack}
                 cover="https://www.agora.io/en/wp-content/uploads/2022/10/3d-spatial-audio-icon.svg"
               >
-                <samp className="user-name">You</samp>
+                <samp className="user-name">YOU</samp>
               </LocalUser>
             </div>
             {remoteUsers.map((user) => (
@@ -55,6 +83,14 @@ export const Basics = () => {
           </div>
         ) : (
           <div className="join-room">
+            <ConnectionProvider endpoint={endpoint}>
+            <WalletProvider wallets={wallets}>
+              <WalletModalProvider>
+                <Func />
+                <WalletMultiButton />
+              </WalletModalProvider>
+            </WalletProvider>
+          </ConnectionProvider>
             <input
               onChange={e => setAppId(e.target.value)}
               placeholder="<Your app ID>"
