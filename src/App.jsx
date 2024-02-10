@@ -9,6 +9,7 @@ import {
   useRemoteUsers,
 } from "agora-rtc-react";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 import * as web3 from "@solana/web3.js";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
@@ -31,9 +32,10 @@ export const Basics = () => {
   let base58Pubkey
   const [calling, setCalling] = useState(false);
   const isConnected = useIsConnected();
-  const [appId, setAppId] = useState(""); 
-  const [channel, setChannel] = useState(""); 
-  const [token, setToken] = useState("");
+  const [appId, setAppId] = useState("618b8acbbd604f3db8fbe62f006836a7"); 
+  const [channel, setChannel] = useState("main"); 
+  const [token, setToken] = useState("007eJxTYDi+WuTGkgUCvNcXtBmV/50pKe31NFfsdbCqb9Nn09edJh8UGMwMLZIsEpOTklLMDEzSjFOSLNKSUs2M0gwMzCyMzRLNp6UeT20IZGRYkraTkZEBAkF8FobcxMw8BgYAfwUgcA==");
+  const [connected,setConnected] = useState(false)
 
   useJoin({appid: appId, channel: channel, token: token ? token : null}, calling);
   //local user
@@ -52,16 +54,20 @@ export const Basics = () => {
     if (publicKey != null) {
       base58Pubkey = publicKey.toBase58();
       console.log(base58Pubkey); 
+      setConnected(true)
       // console.log(balance);
+    }else{
+      setConnected(false)
     }
     
     }
-
+   
   return (
     <>
       <div className="room">
         {isConnected ? (
           <div className="user-list">
+            <Link to="/admin"><button>ADMIN</button></Link>
             <div className="user">
               <LocalUser
                 audioTrack={localMicrophoneTrack}
@@ -86,12 +92,14 @@ export const Basics = () => {
             <ConnectionProvider endpoint={endpoint}>
             <WalletProvider wallets={wallets}>
               <WalletModalProvider>
-                <Func />
                 <WalletMultiButton />
+                <Func />
               </WalletModalProvider>
             </WalletProvider>
           </ConnectionProvider>
-            <input
+          {connected && (
+            <div>
+              <input
               onChange={e => setAppId(e.target.value)}
               placeholder="<Your app ID>"
               value={appId}
@@ -114,6 +122,9 @@ export const Basics = () => {
             >
               <span>Join Channel</span>
             </button>
+            </div>
+          )}
+            
           </div>
         )}
       </div>
