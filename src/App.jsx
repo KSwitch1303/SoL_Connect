@@ -34,7 +34,7 @@ export const Basics = () => {
   const isConnected = useIsConnected();
   const [appId, setAppId] = useState("618b8acbbd604f3db8fbe62f006836a7"); 
   const [channel, setChannel] = useState("main"); 
-  const [token, setToken] = useState("007eJxTYDi+WuTGkgUCvNcXtBmV/50pKe31NFfsdbCqb9Nn09edJh8UGMwMLZIsEpOTklLMDEzSjFOSLNKSUs2M0gwMzCyMzRLNp6UeT20IZGRYkraTkZEBAkF8FobcxMw8BgYAfwUgcA==");
+  const [token, setToken] = useState("007eJxTYLiwgWvdLtNt/240n8utKii/KSbEV3g1/0S6pOEJ00dGpl0KDGaGFkkWiclJSSlmBiZpxilJFmlJqWZGaQYGZhbGZonmR3efSG0IZGRYs2wmAyMUgvgsDLmJmXkMDACvHiEp");
   const [connected,setConnected] = useState(false)
 
   useJoin({appid: appId, channel: channel, token: token ? token : null}, calling);
